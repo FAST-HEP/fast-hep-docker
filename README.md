@@ -34,6 +34,8 @@ singularity pull docker://fasthep/fast-hep-docker
 
 The image also has the ability to access files stored on the UKDC grid via x509 proxy. For the container to access your x509 proxy follow these commands in your current working directory:
 ```
+export X509_VOMS_DIR=/cvmfs/grid.cern.ch/etc/grid-security/vomsdir
+export X509_CERT_DIR=/cvmfs/grid.cern.ch/etc/grid-security/certificates
 export X509_USER_PROXY=$PWD/.x509_user_proxy
 voms-proxy-init -voms <voms> 
 ```
