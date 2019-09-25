@@ -19,6 +19,10 @@ RUN source /opt/rh/rh-python35/enable \
     && pip3 install --no-cache-dir --upgrade setuptools \    
     && pip3 install --no-cache-dir six pyyaml XRootD uproot==3.9.0 fast_curator fast_carpenter fast_plotter
 
+#Enable Python3 at Startup
+RUN echo "#!/bin/bash" > /etc/profile.d/enablepython35.sh \
+    && echo "source /opt/rh/rh-python35/enable" >> /etc/profile.d/enablepython35.sh
+
 # make some useful symlinks that are expected to exist
 RUN source /opt/rh/rh-python35/enable \
   && cd /usr/local/bin \
