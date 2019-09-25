@@ -17,7 +17,7 @@ RUN yum install -y centos-release-scl \
 RUN source /opt/rh/rh-python35/enable \
     && curl https://bootstrap.pypa.io/get-pip.py | python3 \
     && pip3 install --no-cache-dir --upgrade setuptools \    
-    && pip3 install --no-cache-dir six pyyaml XRootD uproot==3.9.0 fast_curator fast_carpenter fast_plotter
+    && pip3 install --no-cache-dir six pyyaml XRootD uproot fast_curator fast_carpenter fast_plotter
 
 # make some useful symlinks that are expected to exist
 RUN source /opt/rh/rh-python35/enable \
