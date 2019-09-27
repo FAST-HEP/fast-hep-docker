@@ -26,13 +26,7 @@ docker run -v $PWD:/work -it fasthep/fast-hep-docker /bin/bash
 ```
 
 ### Singularity 
-
-To download the image:
-```
-singularity pull docker://fasthep/fast-hep-docker
-```
-
-The image also has the ability to access files stored on the UKDC grid via x509 proxy. For the container to access your x509 proxy follow these commands in your current working directory:
+The image has the ability to access files stored on the UKDC grid via x509 proxy. For the container to access your x509 proxy follow these commands in your current working directory:
 ```
 export X509_VOMS_DIR=/cvmfs/grid.cern.ch/etc/grid-security/vomsdir
 export X509_CERT_DIR=/cvmfs/grid.cern.ch/etc/grid-security/certificates
@@ -42,8 +36,30 @@ voms-proxy-init -voms <voms>
 
 To run a shell session inside the container:
 ```
-singularity exec -B /cvmfs -B $PWD:/work fasthep-fast-hep-docker.simg /bin/bash
+singularity exec --contain -B /cvmfs -B $PWD:/work docker://fasthep/fast-hep-docker /bin/bash --login
 ```
+
+For more on how to use Singularity see https://singularity.lbl.gov/quickstart 
+
+### Shifter
+
+To see a list of images already on an individual NERSC cluster:
+```
+shifterimg images
+```
+
+If `fast-hep-docker` is not in that list or is outdate:
+```
+shifterimg -v pull docker:fasthep/fast-hep-docker:latest
+```
+
+To run a shell session inside the container:
+```
+shifter --image=fasthep/fast-hep-docker:latest --module=cvmfs -- bash --login
+```
+
+
+For more on how to use Shifter see https://docs.nersc.gov/programming/shifter/how-to-use/
 
 ## Further Documentation
 Is on its way...
