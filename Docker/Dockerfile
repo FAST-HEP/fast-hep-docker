@@ -1,35 +1,29 @@
 #Base Image
-FROM centos:7.4.1708
+FROM python:3.7.4-alpine3.10
 LABEL maintainer="andrew.naylor@sheffield.ac.uk"
 
 USER root
 
-#Install Python + pxyrootd prerequisites
-RUN yum install -y centos-release-scl \
-    && yum-config-manager --enable rhel-7-server-optional-rpms \
-    && yum install -y epel-release \
-    && yum install -y cmake make zlib-devel gcc-c++ openssl-devel \
-    && yum install -y python-devel rh-python35 rh-python35-python-devel rh-python35-python-setuptools xrootd-client-devel \
-    && yum clean all \
-    && rm -rf /var/cache/yum
+#re-order the lines of code into the fewest stages but once it's all been built properly
+
+#Install bash + numpy + pandas 
+RUN apk add --no-cache bash python3-dev libstdc++ && \
+    apk add --no-cache g++ && \
+    ln -s /usr/include/locale.h /usr/include/xlocale.h && \
+    pip3 install numpy && \
+    pip3 install pandas
+#In one step as it takes a long time to build numpy + pandas
+# apk add --no-cache libpng libpng-dev freetype freetype-dev && \
+
+#Install XRootD + pxyrootd 
+RUN apk add --no-cache libpng libpng-dev freetype freetype-dev llvm llvm-dev 
+RUN apk add --no-cache make cmake git curl openssl
+# openssl-dev
+# alpine-sdk
 
 #Install pip packages
-RUN source /opt/rh/rh-python35/enable \
-    && curl https://bootstrap.pypa.io/get-pip.py | python3 \
-    && pip3 install --no-cache-dir --upgrade setuptools \    
-    && pip3 install --no-cache-dir six pyyaml XRootD uproot fast_curator fast_carpenter fast_plotter
-
-#Enable Python3 at Startup
-RUN echo "#!/bin/bash" > /etc/profile.d/enablepython35.sh \
-    && echo "source /opt/rh/rh-python35/enable" >> /etc/profile.d/enablepython35.sh
-
-# make some useful symlinks that are expected to exist
-RUN source /opt/rh/rh-python35/enable \
-  && cd /usr/local/bin \
-	&& ln -s idle3 idle \
-	&& ln -s pydoc3 pydoc \
-	&& ln -s python3 python \
-	&& ln -s python3-config python-config
+# RUN pip3 install --no-cache-dir six pyyaml XRootD uproot fast_curator fast_carpenter fast_plotter
+RUN pip3 install --no-cache-dir pyyaml uproot fast_curator fast_carpenter fast_plotter
 
 #Set Path to x509_cert
 ENV WORK_DIR /work
@@ -39,14 +33,14 @@ ENV X509_USER_PROXY ${WORK_DIR}/.x509_user_proxy
 ENV X509_VOMS_DIR /cvmfs/grid.cern.ch/etc/grid-security/vomsdir
 ENV X509_CERT_DIR /cvmfs/grid.cern.ch/etc/grid-security/certificates
 
-# Add Python3 source script
-COPY docker-entrypoint.sh /docker-entrypoint.sh
-RUN chmod +x /docker-entrypoint.sh
+#Add Docker entrypoint
+# COPY docker-entrypoint.sh /docker-entrypoint.sh
+# RUN chmod +x /docker-entrypoint.sh
 
 #Create non-root user
 ARG USERID=1000
-RUN adduser --uid ${USERID} nonroot
-USER nonroot
+RUN adduser -D -u ${USERID} nonroot
+# USER nonroot
 
-ENTRYPOINT ["/docker-entrypoint.sh"]
+# ENTRYPOINT ["./docker-entrypoint.sh"]
 CMD ["python3"]
