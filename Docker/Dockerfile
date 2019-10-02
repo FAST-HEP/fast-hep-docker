@@ -18,7 +18,19 @@ RUN apk add --no-cache bash python3-dev libstdc++ && \
 #Install XRootD + pxyrootd 
 RUN apk add --no-cache libpng libpng-dev freetype freetype-dev llvm llvm-dev 
 RUN apk add --no-cache make cmake git curl openssl
+#apk add openssl-dev readline-dev curl-dev libxml2-dev krb5-dev json-c-dev linux-headers
+
 # openssl-dev
+# readline-dev
+# curl-dev
+# libxml2-dev
+# krb5-dev
+# json-c-dev
+
+# linux-headers
+
+# fuse-dev (?)
+
 # alpine-sdk
 
 #Install pip packages
