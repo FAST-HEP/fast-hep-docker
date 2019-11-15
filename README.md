@@ -4,7 +4,7 @@
 
 fast-hep-docker
 =============
-A python 3.6 centos7 based docker image equipped to run all the fast-hep software stack.
+A anaconda python 3.7 alpine based docker image equipped to run all the fast-hep software stack.
 
 ## Usage
 
@@ -22,7 +22,7 @@ docker run -v $PWD:/work -it fasthep/fast-hep-docker fast_carpenter <datasets.ym
 
 To run a shell session inside the container:
 ```
-docker run -v $PWD:/work -it fasthep/fast-hep-docker /bin/bash
+docker run -v $PWD:/work -it fasthep/fast-hep-docker /bin/sh
 ```
 
 ### Singularity 
@@ -34,9 +34,14 @@ export X509_USER_PROXY=$PWD/.x509_user_proxy
 voms-proxy-init -voms <voms> 
 ```
 
+To execute `fast_carpenter` inside the container:
+```
+singularity run --contain -B /cvmfs -B $PWD:/work docker://fasthep/fast-hep-docker fast_carpenter <datasets.yml> <processing.yml>
+```
+
 To run a shell session inside the container:
 ```
-singularity exec --contain -B /cvmfs -B $PWD:/work docker://fasthep/fast-hep-docker /bin/bash --login
+singularity run --contain -B /cvmfs -B $PWD:/work docker://fasthep/fast-hep-docker /bin/sh
 ```
 
 For more on how to use Singularity see https://singularity.lbl.gov/quickstart 
