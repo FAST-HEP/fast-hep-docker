@@ -22,7 +22,7 @@ docker run -v $PWD:/work -it fasthep/fast-hep-docker fast_carpenter <datasets.ym
 
 To run a shell session inside the container:
 ```
-docker run -v $PWD:/work -it fasthep/fast-hep-docker /bin/sh
+docker run -v $PWD:/work -it fasthep/fast-hep-docker /bin/sh -l
 ```
 
 ### Singularity 
@@ -41,7 +41,7 @@ singularity run --contain -B /cvmfs -B $PWD:/work docker://fasthep/fast-hep-dock
 
 To run a shell session inside the container:
 ```
-singularity run --contain -B /cvmfs -B $PWD:/work docker://fasthep/fast-hep-docker /bin/sh
+singularity run --contain -B /cvmfs -B $PWD:/work docker://fasthep/fast-hep-docker /bin/sh -l
 ```
 
 For more on how to use Singularity see https://singularity.lbl.gov/quickstart 
@@ -60,7 +60,7 @@ shifterimg -v pull docker:fasthep/fast-hep-docker:latest
 
 To run a shell session inside the container:
 ```
-shifter --image=fasthep/fast-hep-docker:latest --module=cvmfs -- bash --login
+shifter --module=cvmfs --image=fasthep/fast-hep-docker:latest sh -l
 ```
 
 
