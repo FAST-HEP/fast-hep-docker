@@ -1,36 +1,26 @@
 #Base Image
-FROM centos:7.4.1708
+FROM continuumio/miniconda3:4.7.12-alpine
 LABEL maintainer="andrew.naylor@sheffield.ac.uk"
 
 USER root
+ENV PYTHONDONTWRITEBYTECODE=true
 
-#Install Python + pxyrootd prerequisites
-RUN yum install -y centos-release-scl \
-    && yum-config-manager --enable rhel-7-server-optional-rpms \
-    && yum install -y epel-release \
-    && yum install -y cmake make zlib-devel gcc-c++ openssl-devel \
-    && yum install -y python-devel rh-python35 rh-python35-python-devel rh-python35-python-setuptools xrootd-client-devel \
-    && yum clean all \
-    && rm -rf /var/cache/yum
-
-#Install pip packages
-RUN source /opt/rh/rh-python35/enable \
-    && curl https://bootstrap.pypa.io/get-pip.py | python3 \
-    && pip3 install --no-cache-dir --upgrade setuptools \    
-    && pip3 install --no-cache-dir six pyyaml XRootD uproot fast_curator fast_carpenter fast_plotter
-
-#Enable Python3 at Startup
-RUN echo "#!/bin/bash" > /etc/profile.d/enablepython35.sh \
-    && echo "source /opt/rh/rh-python35/enable" >> /etc/profile.d/enablepython35.sh
-
-# make some useful symlinks that are expected to exist
-RUN source /opt/rh/rh-python35/enable \
-  && cd /usr/local/bin \
-	&& ln -s idle3 idle \
-	&& ln -s pydoc3 pydoc \
-	&& ln -s python3 python \
-	&& ln -s python3-config python-config
-
+#Install python packages + cleanup
+RUN /opt/conda/bin/conda install --yes --freeze-installed \
+        -c conda-forge xrootd \
+    && /opt/conda/bin/pip install --upgrade pip \
+    && /opt/conda/bin/pip install --no-cache-dir \
+        pyyaml \
+        uproot \
+        fast_curator \
+        fast_carpenter \
+        fast_plotter \
+    && /opt/conda/bin/conda clean -afy \
+    && find /opt/conda/ -follow -type f -name '*.a' -delete \
+    && find /opt/conda/ -follow -type f -name '*.pyc' -delete \
+    && find /opt/conda/ -follow -type f -name '*.js.map' -delete \
+    && rm -rf /root/.cache/
+    
 #Set Path to x509_cert
 ENV WORK_DIR /work
 VOLUME ${WORK_DIR}
@@ -39,14 +29,9 @@ ENV X509_USER_PROXY ${WORK_DIR}/.x509_user_proxy
 ENV X509_VOMS_DIR /cvmfs/grid.cern.ch/etc/grid-security/vomsdir
 ENV X509_CERT_DIR /cvmfs/grid.cern.ch/etc/grid-security/certificates
 
-# Add Python3 source script
-COPY docker-entrypoint.sh /docker-entrypoint.sh
-RUN chmod +x /docker-entrypoint.sh
+RUN echo ". /opt/conda/etc/profile.d/conda.sh" >> /etc/profile.d/load.sh && \
+    echo "conda activate base" >> /etc/profile.d/load.sh
 
-#Create non-root user
-ARG USERID=1000
-RUN adduser --uid ${USERID} nonroot
-USER nonroot
-
-ENTRYPOINT ["/docker-entrypoint.sh"]
-CMD ["python3"]
+#non-root user
+USER 10151
+CMD [ "sh", "--login", "-i" ]
