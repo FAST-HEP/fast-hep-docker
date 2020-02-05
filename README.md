@@ -44,6 +44,14 @@ To run a shell session inside the container:
 singularity run --contain -B /cvmfs -B $PWD:/work docker://fasthep/fast-hep-docker /bin/sh -l
 ```
 
+#### CVMFS
+
+The latest fast-hep singularity image is also on CVMFS:
+```
+/cvmfs/singularity.opensciencegrid.org/fasthep/fast-hep-docker\:version-0.2.0
+```
+
+
 For more on how to use Singularity see https://singularity.lbl.gov/quickstart 
 
 ### Shifter
@@ -66,5 +74,3 @@ shifter --module=cvmfs --image=fasthep/fast-hep-docker:latest sh -l
 
 For more on how to use Shifter see https://docs.nersc.gov/programming/shifter/how-to-use/
 
-## Further Documentation
-Is on its way...
