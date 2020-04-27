@@ -15,6 +15,7 @@ RUN /opt/conda/bin/conda install --yes --freeze-installed \
         fast_curator \
         fast_carpenter \
         fast_plotter \
+	coffea \
     && /opt/conda/bin/conda clean -afy \
     && find /opt/conda/ -follow -type f -name '*.a' -delete \
     && find /opt/conda/ -follow -type f -name '*.pyc' -delete \
