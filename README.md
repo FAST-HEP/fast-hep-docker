@@ -1,5 +1,4 @@
-[![pipeline status](https://travis-ci.com/FAST-HEP/fast-hep-docker.svg?branch=master)](https://travis-ci.com/FAST-HEP/fast-hep-docker)
-[![coverage report](https://codecov.io/gh/FAST-HEP/fast-hep-docker/branch/master/graph/badge.svg)](https://codecov.io/gh/FAST-HEP/fast-hep-docker)
+[![Docker Build Status](https://img.shields.io/docker/cloud/build/fasthep/fast-hep-docker.svg)](https://hub.docker.com/r/fasthep/fast-hep-docker/builds)
 [![Gitter](https://badges.gitter.im/FAST-HEP/community.svg)](https://gitter.im/FAST-HEP/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
 fast-hep-docker
